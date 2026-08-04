@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timesheet Bot — Staff Guide</title>
+<style>
+  :root {
+    --ink: #232042;
+    --paper: #faf8f5;
+    --paper-raised: #ffffff;
+    --accent: #c97923;
+    --accent-ink: #6b4310;
+    --accent-quiet: #4a3f7a;
+    --muted: #837c93;
+    --line: #e4dfd6;
+    --success: #3f7a52;
+    --success-bg: #e9f3ec;
+    --bubble-bot: #efeaf7;
+    --bubble-bot-ink: #2f2755;
+    --bubble-user: #c97923;
+    --bubble-user-ink: #2a1b04;
+    --code-bg: #232042;
+    --code-ink: #f3ecd9;
+    --shadow: 0 1px 2px rgba(35, 32, 66, 0.06), 0 8px 24px -12px rgba(35, 32, 66, 0.18);
+  }
+
+  :root[data-theme="dark"] {
+    --ink: #ece8fb;
+    --paper: #171426;
+    --paper-raised: #1f1b34;
+    --accent: #e6a352;
+    --accent-ink: #2a1b04;
+    --accent-quiet: #b9aeee;
+    --muted: #9c93b8;
+    --line: #322c4c;
+    --success: #7fcf9a;
+    --success-bg: #1c3327;
+    --bubble-bot: #2a2447;
+    --bubble-bot-ink: #ded8f7;
+    --bubble-user: #e6a352;
+    --bubble-user-ink: #2a1b04;
+    --code-bg: #0f0d1c;
+    --code-ink: #f3ecd9;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ece8fb;
+      --paper: #171426;
+      --paper-raised: #1f1b34;
+      --accent: #e6a352;
+      --accent-ink: #2a1b04;
+      --accent-quiet: #b9aeee;
+      --muted: #9c93b8;
+      --line: #322c4c;
+      --success: #7fcf9a;
+      --success-bg: #1c3327;
+      --bubble-bot: #2a2447;
+      --bubble-bot-ink: #ded8f7;
+      --bubble-user: #e6a352;
+      --bubble-user-ink: #2a1b04;
+      --code-bg: #0f0d1c;
+      --code-ink: #f3ecd9;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-quiet);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .dek {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 42ch;
+    margin: 0.25rem 0 0;
+  }
+
+  h2 {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    font-size: 1.08rem;
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+  }
+
+  section { margin-bottom: 3rem; }
+
+  p { margin: 0 0 1rem; max-width: 65ch; }
+  p:last-child { margin-bottom: 0; }
+
+  .lede { font-size: 1.08rem; }
+
+  /* --- what-it-does: two halves, laid out side by side --- */
+  .halves {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .half {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--shadow);
+  }
+
+  .half .when {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-quiet);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .half h3 { margin-bottom: 0.35rem; }
+  .half p { margin: 0; font-size: 0.94rem; color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .halves { grid-template-columns: 1fr; }
+  }
+
+  /* --- numbered onboarding steps: a real procedure, so numbers carry meaning --- */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.9rem;
+    align-items: start;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    font-family: Georgia, serif;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .steps .step-body { padding-top: 0.15rem; }
+  .steps strong { display: block; margin-bottom: 0.15rem; }
+  .steps .step-note { color: var(--muted); font-size: 0.95rem; margin-top: 0.3rem; }
+
+  /* --- chat bubble mock: mirrors the real Teams exchange --- */
+  .chat {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .bubble {
+    max-width: 82%;
+    padding: 0.6rem 0.9rem;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+
+  .bubble.bot {
+    background: var(--bubble-bot);
+    color: var(--bubble-bot-ink);
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+  }
+
+  .bubble.user {
+    background: var(--bubble-user);
+    color: var(--bubble-user-ink);
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    font-size: 0.88rem;
+  }
+
+  .bubble.bot.confirm {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    font-size: 0.85rem;
+  }
+
+  .bubble .label {
+    display: block;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+    margin-bottom: 0.25rem;
+  }
+
+  /* --- format callout --- */
+  .format {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-radius: 10px;
+    padding: 1.1rem 1.3rem;
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+
+  .format .placeholder { opacity: 0.55; }
+  .format .divider { color: var(--accent); }
+
+  /* --- faq --- */
+  .faq-item { padding: 1.1rem 0; border-top: 1px solid var(--line); }
+  .faq-item:last-child { padding-bottom: 0; }
+  .faq-item h3 { margin-bottom: 0.4rem; }
+  .faq-item p { color: var(--ink); }
+
+  .callout {
+    background: var(--success-bg);
+    border: 1px solid color-mix(in srgb, var(--success) 35%, transparent);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.93rem;
+    color: var(--ink);
+  }
+
+  .callout strong { color: var(--success); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 1.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  footer a { color: var(--accent-quiet); }
+
+  code {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    background: var(--bubble-bot);
+    color: var(--bubble-bot-ink);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+
+  @media (max-width: 480px) {
+    .page { padding: 2rem 1.1rem 3.5rem; }
+    .bubble { max-width: 92%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <span class="eyebrow">eBASE Africa · Internal Guide</span>
+    <h1>Using the Timesheet Bot</h1>
+    <p class="dek">A Teams bot that builds and keeps your monthly timesheet up to date automatically — no spreadsheets to open, no forms to fill.</p>
+  </div>
+
+  <section>
+    <h2>What it does</h2>
+    <p class="lede">It runs two things for you automatically, working together on the same file:</p>
+    <div class="halves">
+      <div class="half">
+        <span class="when">1st of every month</span>
+        <h3>Creates your timesheet</h3>
+        <p>A fresh, correctly formatted timesheet for the new month is generated and placed in your OneDrive automatically. You never have to create one yourself.</p>
+      </div>
+      <div class="half">
+        <span class="when">Every evening, ~5pm</span>
+        <h3>Logs your day</h3>
+        <p>The bot asks what you achieved in Teams. You reply, and it writes the entry straight into that month's timesheet — correct day, correct row.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Getting started</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-body">
+          <strong>Open Microsoft Teams</strong>
+          Desktop app, mobile app, or <a href="https://teams.microsoft.com">teams.microsoft.com</a> — any of them work.
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Go to Apps, search "Timesheet Bot"</strong>
+          It's already published for eBASE Africa, so it'll show up directly — no approval or install request needed.
+          <div class="step-note">Open it and add it to your chats like you would any other app.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Send it one message — anything, even just "hi"</strong>
+          <div class="step-note">This is the step that actually matters: it's what lets the bot find you later. Skip it, and you won't receive a daily prompt.</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What happens every day</h2>
+    <p class="lede">Around <strong>5:00pm your local time</strong>, the bot sends you a message asking what you achieved. Reply in the same chat.</p>
+
+    <div class="chat">
+      <div class="bubble bot">
+        <span class="label">Timesheet Bot</span>What did you achieve today? Reply with one activity per line, formatted as: activity - location - hours
+      </div>
+      <div class="bubble user">Community health outreach - Douala - 4
+Weekly team check-in - Remote - 1</div>
+      <div class="bubble bot confirm">
+        <span class="label">Timesheet Bot</span>Parsed 2 activity(ies):
+  - Community health outreach | Douala | 4.0h
+  - Weekly team check-in | Remote | 1.0h
+Logged to your August 2026 timesheet.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The format</h2>
+    <p>One activity per line. Three parts, separated by a dash:</p>
+    <div class="format"><span class="placeholder">activity</span> <span class="divider">-</span> <span class="placeholder">location</span> <span class="divider">-</span> <span class="placeholder">hours</span></div>
+    <p style="margin-top: 1rem;">Several activities in one day? Send them as separate lines in the same reply — the bot handles all of them at once. Working on the same task across several days this week? Just log it each day; the bot recognizes it's the same activity and adds the hours to the right day automatically, rather than creating duplicate entries.</p>
+  </section>
+
+  <section>
+    <h2>Missed a day?</h2>
+    <p>If you don't reply one evening, the next time you do reply, the bot attributes it to the day it actually asked about — not the day you happened to answer. You don't need to do anything differently; just reply when you're ready, and you'll see a note confirming which day it logged.</p>
+    <div class="chat" style="margin-top: 1rem;">
+      <div class="bubble user">Client site visit - Yaoundé - 3</div>
+      <div class="bubble bot confirm">
+        <span class="label">Timesheet Bot</span>Parsed 1 activity(ies):
+  - Client site visit | Yaoundé | 3.0h
+(Logging this for Monday, August 03, your last unanswered day.)
+Logged to your August 2026 timesheet.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Finding your timesheet</h2>
+    <p>Your monthly timesheet lives in your own OneDrive, generated automatically on the 1st of each month:</p>
+    <p><strong>OneDrive → Timesheets folder → <code>&lt;Your Name&gt; - &lt;Month Year&gt; Timesheet.xlsx</code></strong></p>
+    <div class="callout"><strong>Tip:</strong> if a search for the file comes up empty, navigate to the Timesheets folder directly instead — search can lag a little behind a freshly created file.</div>
+    <div class="callout" style="margin-top: 0.75rem;"><strong>Important:</strong> if you have the file open (in Excel, or a browser tab) when the bot tries to log your entry, it can't save — close it before replying to the daily prompt, or right after if you had it open for another reason.</div>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+
+    <div class="faq-item">
+      <h3>What if I make a typo or send something the bot doesn't understand?</h3>
+      <p>It tells you exactly which line it couldn't read and why, and still logs whichever lines were valid — one bad line never blocks the rest of your message.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>I logged something wrong. Can I fix it?</h3>
+      <p>Yes — it's your file. Open it from OneDrive and correct the activity, location, or hours directly in the cell, the same as you'd fix a typo in any spreadsheet. Just edit the values in place rather than deleting or adding rows yourself; the bot manages rows and totals automatically, and a manual insert or delete can throw those off. If you do run into that, reach out to IT.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>The bot said it couldn't save my entry — what does that mean?</h3>
+      <p>It means your timesheet file was open somewhere (Excel, a browser tab) at the exact moment it tried to write to it — OneDrive locks a file while it's open, the same way it would for anyone else trying to edit it at the same time. Close the file and resend your message; nothing was lost.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Does it work on weekends?</h3>
+      <p>Yes — the prompt goes out every day, including weekends, in case you worked. No reply, no entry — it never assumes.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>The bot didn't message me today.</h3>
+      <p>Double-check you completed step 3 above (sending it a first message). If you did and still didn't hear from it, contact IT.</p>
+    </div>
+  </section>
+
+  <footer>
+    Questions or issues — reach out to the IT team at eBASE Africa.
+  </footer>
+
+</div>
+</body>
+</html>
