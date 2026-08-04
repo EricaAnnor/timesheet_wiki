@@ -6,64 +6,67 @@
 <title>Timesheet Bot — Staff Guide</title>
 <style>
   :root {
-    --ink: #232042;
-    --paper: #faf8f5;
-    --paper-raised: #ffffff;
-    --accent: #c97923;
-    --accent-ink: #6b4310;
-    --accent-quiet: #4a3f7a;
-    --muted: #837c93;
-    --line: #e4dfd6;
-    --success: #3f7a52;
-    --success-bg: #e9f3ec;
-    --bubble-bot: #efeaf7;
-    --bubble-bot-ink: #2f2755;
-    --bubble-user: #c97923;
-    --bubble-user-ink: #2a1b04;
-    --code-bg: #232042;
-    --code-ink: #f3ecd9;
-    --shadow: 0 1px 2px rgba(35, 32, 66, 0.06), 0 8px 24px -12px rgba(35, 32, 66, 0.18);
+    --ink: #4b371c;
+    --paper: #e2f2e8;
+    --paper-raised: #fffdf8;
+    --accent: #d9b98c;
+    --accent-ink: #4b371c;
+    --accent-quiet: #007a4a;
+    --muted: #6b7d72;
+    --line: #c9e3d3;
+    --tip: #0f7fae;
+    --tip-bg: #e4f4fb;
+    --bubble-bot: #cfcfe1;
+    --bubble-bot-ink: #362a4d;
+    --bubble-user: #d9b98c;
+    --bubble-user-ink: #4b371c;
+    --code-bg: #d9b98c;
+    --code-ink: #4b371c;
+    --code-accent: #0f7fae;
+    --shadow: 0 1px 2px rgba(75, 55, 28, 0.08), 0 8px 24px -12px rgba(11, 61, 40, 0.28);
   }
 
   :root[data-theme="dark"] {
-    --ink: #ece8fb;
-    --paper: #171426;
-    --paper-raised: #1f1b34;
-    --accent: #e6a352;
-    --accent-ink: #2a1b04;
-    --accent-quiet: #b9aeee;
-    --muted: #9c93b8;
-    --line: #322c4c;
-    --success: #7fcf9a;
-    --success-bg: #1c3327;
-    --bubble-bot: #2a2447;
-    --bubble-bot-ink: #ded8f7;
-    --bubble-user: #e6a352;
-    --bubble-user-ink: #2a1b04;
-    --code-bg: #0f0d1c;
-    --code-ink: #f3ecd9;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    --ink: #f1ecfa;
+    --paper: #0d2b1e;
+    --paper-raised: #241a10;
+    --accent: #4b371c;
+    --accent-ink: #f3ead9;
+    --accent-quiet: #2ecf8e;
+    --muted: #a9c4b5;
+    --line: #1e4130;
+    --tip: #89d0f0;
+    --tip-bg: #163040;
+    --bubble-bot: #453f63;
+    --bubble-bot-ink: #e7e3f5;
+    --bubble-user: #4b371c;
+    --bubble-user-ink: #f3ead9;
+    --code-bg: #120d07;
+    --code-ink: #f3ead9;
+    --code-accent: #89d0f0;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #ece8fb;
-      --paper: #171426;
-      --paper-raised: #1f1b34;
-      --accent: #e6a352;
-      --accent-ink: #2a1b04;
-      --accent-quiet: #b9aeee;
-      --muted: #9c93b8;
-      --line: #322c4c;
-      --success: #7fcf9a;
-      --success-bg: #1c3327;
-      --bubble-bot: #2a2447;
-      --bubble-bot-ink: #ded8f7;
-      --bubble-user: #e6a352;
-      --bubble-user-ink: #2a1b04;
-      --code-bg: #0f0d1c;
-      --code-ink: #f3ecd9;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+      --ink: #f1ecfa;
+      --paper: #0d2b1e;
+      --paper-raised: #241a10;
+      --accent: #4b371c;
+      --accent-ink: #f3ead9;
+      --accent-quiet: #2ecf8e;
+      --muted: #a9c4b5;
+      --line: #1e4130;
+      --tip: #89d0f0;
+      --tip-bg: #163040;
+      --bubble-bot: #453f63;
+      --bubble-bot-ink: #e7e3f5;
+      --bubble-user: #4b371c;
+      --bubble-user-ink: #f3ead9;
+      --code-bg: #120d07;
+      --code-ink: #f3ead9;
+      --code-accent: #89d0f0;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
     }
   }
 
@@ -281,7 +284,7 @@
   }
 
   .format .placeholder { opacity: 0.55; }
-  .format .divider { color: var(--accent); }
+  .format .divider { color: var(--code-accent); }
 
   /* --- faq --- */
   .faq-item { padding: 1.1rem 0; border-top: 1px solid var(--line); }
@@ -290,15 +293,15 @@
   .faq-item p { color: var(--ink); }
 
   .callout {
-    background: var(--success-bg);
-    border: 1px solid color-mix(in srgb, var(--success) 35%, transparent);
+    background: var(--tip-bg);
+    border: 1px solid color-mix(in srgb, var(--tip) 35%, transparent);
     border-radius: 10px;
     padding: 0.9rem 1.1rem;
     font-size: 0.93rem;
     color: var(--ink);
   }
 
-  .callout strong { color: var(--success); }
+  .callout strong { color: var(--tip); }
 
   footer {
     border-top: 1px solid var(--line);
@@ -328,7 +331,7 @@
 <div class="page">
 
   <div class="masthead">
-    <span class="eyebrow">eBASE Africa · Internal Guide</span>
+    <span class="eyebrow"><span style="text-transform: none;">e</span>BASE Africa · Internal Guide</span>
     <h1>Using the Timesheet Bot</h1>
     <p class="dek">A Teams bot that builds and keeps your monthly timesheet up to date automatically — no spreadsheets to open, no forms to fill.</p>
   </div>
@@ -433,7 +436,7 @@ Logged to your August 2026 timesheet.
 
     <div class="faq-item">
       <h3>I logged something wrong. Can I fix it?</h3>
-      <p>Yes — it's your file. Open it from OneDrive and correct the activity, location, or hours directly in the cell, the same as you'd fix a typo in any spreadsheet. Just edit the values in place rather than deleting or adding rows yourself; the bot manages rows and totals automatically, and a manual insert or delete can throw those off. If you do run into that, reach out to IT.</p>
+      <p>Yes — it's your file. Open it from OneDrive and correct the activity, location, or hours directly in the cell, the same as you'd fix a typo in any spreadsheet. Just edit the values in place rather than deleting or adding rows yourself; the bot manages rows and totals automatically, and a manual insert or delete can throw those off. If you do run into that, reach out to the iCODE team.</p>
     </div>
 
     <div class="faq-item">
@@ -448,12 +451,12 @@ Logged to your August 2026 timesheet.
 
     <div class="faq-item">
       <h3>The bot didn't message me today.</h3>
-      <p>Double-check you completed step 3 above (sending it a first message). If you did and still didn't hear from it, contact IT.</p>
+      <p>Double-check you completed step 3 above (sending it a first message). If you did and still didn't hear from it, contact the iCODE team.</p>
     </div>
   </section>
 
   <footer>
-    Questions or issues — reach out to the IT team at eBASE Africa.
+    Questions or issues — reach out to the iCODE team at eBASE Africa.
   </footer>
 
 </div>
